@@ -17,7 +17,7 @@ makedocs(
                 :Macros => Dict()
             )
          )),
-         canonical="https://twMisc.github.io/ClusteringToMaTo.jl",
+         canonical="https://pnavaro.github.io/ClusteringToMaTo.jl",
          assets=String[],
          ),
          doctest = false,
@@ -29,6 +29,6 @@ makedocs(
 
 deploydocs(;
     branch = "gh-pages",
-    devbranch = "master",
-    repo   = "github.com/twMisc/ClusteringToMaTo.jl"
+    devbranch = "main",
+    repo   = "github.com/pnavaro/ClusteringToMaTo.jl"
 )
