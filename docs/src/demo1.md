@@ -9,6 +9,8 @@ using ClusteringToMaTo
 using Plots
 using DelimitedFiles
 import Clustering
+using Ripserer
+
 
 function read_csv(filepath)
     data, columns = readdlm(filepath, ',',  header=true)
@@ -16,9 +18,16 @@ function read_csv(filepath)
 end
 ```
 
+Plot the persistence diagram to select the ``\tau`` parameter.
+
 ```@example demo1
 points, true_labels = read_csv(joinpath("data", "TwoDiamonds.csv"))
+result = ripserer(eachcol(points))
+plot(result[2])
+```
+We keep only two clusters by choosing ``\tau = 0.2``
 
+```@example demo1
 p = plot(layout=(1,2))
 scatter!(p[1,1], points[1,:], points[2,:], c = true_labels, 
 ms=3, aspect_ratio=:equal, markerstrokewidth=0,label="")
