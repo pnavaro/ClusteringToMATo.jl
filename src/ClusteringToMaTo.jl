@@ -3,24 +3,33 @@ module ClusteringToMaTo
 using DataStructures
 using NearestNeighbors
 
-export data2clust
+export data2clust, density_function
 
-function density_function( dists, dim, k)
+function density_function(points::Matrix{Float64}, k::Int)
+
+    d, n  = size(points)
+    kdtree = KDTree(points)
+    idxs, dists = knn(kdtree, points, k)
+    density_function(dists, d, k)
+
+end
+
+function density_function( dists::Vector{Vector{Float64}}, d::Int, k::Int)
 
     n = length(dists)
     f = zeros(n)
     
-    if dim == 2
+    if d == 2
         for i = 1:n
             f[i] = k * (k + 1) / (2π * n * sum(dists[i] .^ 2))
         end
-    elseif dim == 3
+    elseif d == 3
         for i = 1:n
             f[i] = k * (k + 1) / (2π * n * (4 / 3) * sum(dists[i] .^ 3))
         end
-    elseif dim == 1
+    elseif d == 1
         for i = 1:n
-            f[i] = k * (k + 1) / (2 * n * sum(dists[i]))
+            f[i] = k * (k + 1) / (2n * sum(dists[i]))
         end
     end
 
