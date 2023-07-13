@@ -2,3 +2,4 @@
 *.swp
 FCPS/
 Manifest.toml
+docs/src/data/
