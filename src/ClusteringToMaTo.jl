@@ -5,31 +5,39 @@ using NearestNeighbors
 
 export data2clust, density_function
 
-function density_function(points::Matrix{Float64}, k::Int)
+function density_function(points::Matrix{Float64}, q::Int)
 
     d, n  = size(points)
     kdtree = KDTree(points)
-    idxs, dists = knn(kdtree, points, k)
-    density_function(dists, d, k)
+    idxs, dists = knn(kdtree, points, q)
+    density_function(dists, d, q)
 
 end
 
-function density_function( dists::Vector{Vector{Float64}}, d::Int, k::Int)
+"""
+    density_function( dists, d, q)
+
+density function approximation
+
+- `q` regularity parameter
+
+"""
+function density_function( dists::Vector{Vector{Float64}}, d::Int, q::Int)
 
     n = length(dists)
     f = zeros(n)
     
     if d == 2
         for i = 1:n
-            f[i] = k * (k + 1) / (2π * n * sum(dists[i] .^ 2))
+            f[i] = q * (q + 1) / (2π * n * sum(dists[i] .^ 2))
         end
     elseif d == 3
         for i = 1:n
-            f[i] = k * (k + 1) / (2π * n * (4 / 3) * sum(dists[i] .^ 3))
+            f[i] = q * (q + 1) / (2π * n * (4 / 3) * sum(dists[i] .^ 3))
         end
     elseif d == 1
         for i = 1:n
-            f[i] = k * (k + 1) / (2n * sum(dists[i]))
+            f[i] = q * (q + 1) / (2n * sum(dists[i]))
         end
     end
 
@@ -37,21 +45,32 @@ function density_function( dists::Vector{Vector{Float64}}, d::Int, k::Int)
 
 end
 
-function data2clust(points::Array, graph = 1, k1 = 4, k2 = 4, τ = 0.01)
+function data2clust(points::Matrix{Float64}; graph = 1, k = 4, q = 4, τ = 0.01)
+
+    data2clust(points::Matrix{Float64}, graph, k, q, τ)
+
+end
+
+"""
+    data2clust(points, graph, k, q, τ)
+
+- `k` : number of nearest neighbors to create the graph
+- `q` : regularity parameter for the approximation of the density function
+"""
+function data2clust(points::Matrix{Float64}, graph, k, q, τ)
 
     @assert graph in (1,2) "The variable `graph` should be 1 or 2"
 
     dim, n  = size(points)
     kdtree = KDTree(points)
-    k = k2 + 1
-    idxs, dists = knn(kdtree, points, k)
+    idxs, dists = knn(kdtree, points, q)
 
-    f = density_function(dists, dim, k)
+    f = density_function(dists, dim, q)
 
     if graph == 1
-        idxs, dists = knn(kdtree, points, k1+1)
+        idxs, dists = knn(kdtree, points, k)
     elseif graph == 2
-        idxs = inrange(kdtree, points, k1)
+        idxs = inrange(kdtree, points, k)
     end
 
     v = sortperm(f, rev = true)
@@ -62,7 +81,7 @@ function data2clust(points::Array, graph = 1, k1 = 4, k2 = 4, τ = 0.01)
     for i = eachindex(v)
         nGi = [j for j in clusters[i] if j < i]
         if length(nGi) == 0
-            #vertex is a peak of f within G
+            continue
         else
             g = nGi[argmax(view(f, nGi))]
             ei = find_root!(u, g)
@@ -81,6 +100,7 @@ function data2clust(points::Array, graph = 1, k1 = 4, k2 = 4, τ = 0.01)
             end
         end
     end
+
     s = Int[]
     for i = 1:n
         g = find_root!(u, i)

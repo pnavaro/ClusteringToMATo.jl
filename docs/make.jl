@@ -23,8 +23,8 @@ makedocs(
          doctest = false,
          pages = [
                   "Home" => "index.md",
-                  "Demo 1" => "demo1.md",
-                  "Demo 2" => "demo2.md" 
+                  "FCPS data" => "demo1.md",
+                  "TDA datasets" => "demo2.md" 
                  ])
 
 deploydocs(;

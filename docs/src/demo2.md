@@ -28,7 +28,7 @@ toy = collect(transpose(readdlm(joinpath("toy_example_w_o_density.txt"))))
 ```
 
 ```@example demo2
-@time labels = data2clust(toy, 2, 2, 30, 0.005)
+@time labels = data2clust(toy, 2, 1.0, 100, 0.01)
 
 scatter(view(toy,1, :), view(toy,2,:), c = labels; options... )
 ```
