@@ -11,9 +11,7 @@ Order   = [:type, :function]
 
 ```@example circles
 using Plots
-import ClusteringToMaTo: data2clust
-using NearestNeighbors
-using DataStructures
+using ClusteringToMaTo
 using Ripserer
 
 θ = LinRange(0, 2π, 61)[1:end-1]
