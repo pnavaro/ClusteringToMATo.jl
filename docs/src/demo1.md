@@ -9,8 +9,6 @@ using ClusteringToMaTo
 using Plots
 using DelimitedFiles
 import Clustering
-using Ripserer
-
 
 function read_csv(filepath)
     data, columns = readdlm(filepath, ',',  header=true)
@@ -18,21 +16,13 @@ function read_csv(filepath)
 end
 ```
 
-Plot the persistence diagram to select the ``\tau`` parameter.
-
 ```@example demo1
 points, true_labels = read_csv(joinpath("data", "TwoDiamonds.csv"))
-result = ripserer(eachcol(points))
-plot(result[2])
-```
-We keep only two clusters by choosing ``\tau = 0.2``
-
-```@example demo1
 p = plot(layout=(1,2))
 scatter!(p[1,1], points[1,:], points[2,:], c = true_labels, 
 ms=3, aspect_ratio=:equal, markerstrokewidth=0,label="")
 
-@time labels = data2clust(points, 2, 0.25, 20, 0.2)
+@time labels = data2clust(points, 2, 0.25, 20, 0.25)
 println(" NMI = $(Clustering.mutualinfo(true_labels, labels))")
 scatter!(p[1,2], points[1,:], points[2, :], c = labels, 
       label="", ms=3, markerstrokewidth=0, aspect_ratio=1)
@@ -40,12 +30,11 @@ scatter!(p[1,2], points[1,:], points[2, :], c = labels,
 
 ```@example demo1
 points, true_labels = read_csv(joinpath("data", "Lsun.csv"))
-
 p = plot(layout=(1,2))
 scatter!(p[1,1], points[1,:], points[2,:], c = true_labels, 
 ms=3, aspect_ratio=:equal, markerstrokewidth=0,label="")
-
-@time labels = data2clust(points, 1, 5, 5, 0.4)
+1
+@time labels = data2clust(points, 1, 10, 5, 0.6)
 println(" NMI = $(Clustering.mutualinfo(true_labels, labels))")
 scatter!(p[1,2], points[1,:], points[2, :], c = labels, 
       label="", ms=3, markerstrokewidth=0, aspect_ratio=1)
@@ -53,7 +42,6 @@ scatter!(p[1,2], points[1,:], points[2, :], c = labels,
 
 ```@example demo1
 points, true_labels = read_csv(joinpath("data", "Atom.csv"))
-
 p = plot(layout=(1,2))
 scatter!(p[1,1], points[1,:], points[2,:], points[3, :], c = true_labels, 
 ms=3, aspect_ratio=:equal, markerstrokewidth=0,label="")
