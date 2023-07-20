@@ -1,9 +1,9 @@
-# ClusteringToMaTo.jl
+# Clustering using Topological Mode Analysis Tool
 
 [![](https://img.shields.io/badge/docs-dev-blue.svg)](https://pnavaro.github.io/ClusteringToMaTo.jl/dev)
 
 
-Clustering with the Julia language, based on 
+ClusteringToMATo.jl is a Julia package, based on 
 
 Chazal, F., Guibas, L. J., Oudot, S. Y., and Skraba, P. 2013. Persistence-based clustering in Riemannian
 manifolds.
@@ -13,8 +13,6 @@ DOI:
 http://dx.doi.org/10.1145/2535927
 
 [preprint](https://geometrica.saclay.inria.fr/data/Steve.Oudot/clustering/jacm_oudot.pdf)
-
-
 
 
 ## using datas from
