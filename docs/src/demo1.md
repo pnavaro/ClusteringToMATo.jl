@@ -66,7 +66,7 @@ scatter!(p[1,2], points[1,:], points[2, :], points[3, :], c = labels,
 ```
 
 ```@example demo1
-points, true_labels = read_csv(joinpath("data", "Engytime.csv"))
+points, true_labels = read_csv(joinpath("data", "EngyTime.csv"))
 
 p = plot(layout=(1,2))
 scatter!(p[1,1], points[1,:], points[2,:], c = true_labels, 
