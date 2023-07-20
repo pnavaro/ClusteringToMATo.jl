@@ -16,7 +16,7 @@ points = collect(transpose(readdlm(joinpath("spiral_w_o_density.txt"))))
 ```
 
 ```@example demo2
-@time labels = data2clust(points, 2, 87, 87, 7.5*10.0^(-7))
+@time labels, intervals = data2clust(points, 2, 87, 87, 7.5*10.0^(-7))
 
 scatter(points[1, :], points[2, :], c = labels; options...)
 ```
@@ -28,7 +28,7 @@ toy = collect(transpose(readdlm(joinpath("toy_example_w_o_density.txt"))))
 ```
 
 ```@example demo2
-@time labels = data2clust(toy, 2, 1.0, 100, 0.01)
+@time labels, intervals = data2clust(toy, 2, 1.0, 100, 0.01)
 
 scatter(view(toy,1, :), view(toy,2,:), c = labels; options... )
 ```
