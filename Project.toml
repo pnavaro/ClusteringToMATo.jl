@@ -8,6 +8,7 @@ DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 NearestNeighbors = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
+RecipesBase = "3cdcf5f2-1ef4-517c-9805-6587b60abb01"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]

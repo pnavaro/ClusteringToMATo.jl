@@ -9,6 +9,51 @@ Order   = [:type, :function]
 
 ## First example
 
+Create some data
+
+```@example first
+using ClusteringToMATo
+using Plots
+
+function noisy_circle(n; r1=1, r2=1, noise=0.1)
+    points = zeros(2, n)
+    for i in 1:n
+        θ = 2π * rand()
+        point = (
+            r1 * sin(θ) + noise * rand() - noise / 2,
+            r2 * cos(θ) + noise * rand() - noise / 2,
+        )
+        points[:,i] .= point
+    end
+    return points
+end
+
+points = hcat(noisy_circle(500), noisy_circle(500, r1=0.5, r2=0.5))
+scatter(points[1,:], points[2,:], aspect_ratio=1)
+```
+
+Compute density approximation and plot
+
+```julia
+import ClusteringToMATo: BallGraph, compute_graph, compute_density, DTM
+graph = compute_graph(BallGraph(0.1), points)
+f = compute_density(DTM(5), points)
+scatter(points[1,:], points[2,:], marker_z = f, aspect_ratio=1)
+```
+
+```julia
+import ClusteringToMATo: compute_persistence
+
+labels, intervals = compute_persistence(points, f, graph, Inf)
+
+plot(intervals, τ = 120)
+```
+
+```julia
+labels, intervals = compute_persistence(points, f, graph, 120)
+scatter(points[1,:], points[2,:], c = labels, aspect_ratio=1)
+```
+
 ## Parameter selection
 
 ToMATo takes in three inputs: the neighborhood graph G, the density
