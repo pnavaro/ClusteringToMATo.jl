@@ -1,1 +1,4 @@
-using ClusteringToMaTo
+using ClusteringToMATo
+using Test
+
+@test true
