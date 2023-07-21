@@ -14,6 +14,8 @@ http://dx.doi.org/10.1145/2535927
 
 [preprint](https://geometrica.saclay.inria.fr/data/Steve.Oudot/clustering/jacm_oudot.pdf)
 
+You can find more details on this algorithm [here](https://geometrica.saclay.inria.fr/data/Steve.Oudot/clustering/) and a C++ implementation.
+
 ## using datas from
 
 - https://www.mdpi.com/2306-5729/5/1/13

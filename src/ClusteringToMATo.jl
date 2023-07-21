@@ -1,43 +1,115 @@
 module ClusteringToMATo
 
 using DataStructures
+using Distances
+using DocStringExtensions
 using NearestNeighbors
 
-export data2clust, density_function
+export tomato, density_function
 
-function density_function(points::Matrix{Float64}, q::Int)
+
+"""
+$(SIGNATURES)
+"""
+function ball_density(points, δ)
+
+    n = size(points, 2)
+    btree = BallTree(points)
+    n_neighbors = inrangecount(btree, points, δ)
+
+    return - (n_neighbors .+ 1) ./ n
+
+end
+
+
+"""
+$(SIGNATURES)
+"""
+function dtm(points, k::Int)
 
     d, n  = size(points)
     kdtree = KDTree(points)
-    idxs, dists = knn(kdtree, points, q)
-    density_function(dists, d, q)
+    idxs, dists = knn(kdtree, points, k)
+    
+    f = zeros(n)
+    for i = 1:n
+        f[i] = sqrt(k / sum(dists[i].^2))
+    end
+    f
 
 end
 
 """
-    density_function( dists, d, q)
+$(SIGNATURES)
+"""
+function gaussian_nn(points, k::Int, h)
+
+    d, n  = size(points)
+    kdtree = KDTree(points)
+    idxs, dists = knn(kdtree, points, k)
+    
+    f = zeros(n)
+    for i = 1:n
+        f[i] = - sum(exp.(dists[i]*(-0.5)/h))
+    end
+    f
+
+end
+
+"""
+$(SIGNATURES)
+"""
+function gaussian_mu(points, δ, h)
+
+    d, n  = size(points)
+    btree = BallTree(points)
+    idxs = inrange(btree, points, δ)
+    dists = pairwise(Euclidean(), points, dims=2)
+    f = zeros(n)
+    for i = 1:n
+        f[i] = - sum(exp(dists[i,j]*(-0.5)/h) for j in idxs[i])
+    end
+    f
+
+end
+
+
+"""
+$(SIGNATURES)
+"""
+function density_function(points::Matrix{Float64}, k::Int)
+
+    d, n  = size(points)
+    kdtree = KDTree(points)
+    idxs, dists = knn(kdtree, points, k)
+    density_function(dists, d, k)
+
+end
+
+"""
+$(SIGNATURES)
 
 density function approximation
 
 - `q` regularity parameter
 
 """
-function density_function( dists::Vector{Vector{Float64}}, d::Int, q::Int)
+function density_function( dists::Vector{Vector{Float64}}, d::Int, k::Int)
 
     n = length(dists)
     f = zeros(n)
     
     if d == 2
         for i = 1:n
-            f[i] = q * (q + 1) / (2π * n * sum(dists[i] .^ 2))
+            f[i] = k * (k + 1) / (2π * n * sum(dists[i] .^ 2))
         end
     elseif d == 3
         for i = 1:n
-            f[i] = q * (q + 1) / (2π * n * (4 / 3) * sum(dists[i] .^ 3))
+            f[i] = k * (k + 1) / (2π * n * (4 / 3) * sum(dists[i] .^ 3))
         end
     elseif d == 1
         for i = 1:n
-            f[i] = q * (q + 1) / (2n * sum(dists[i]))
+            f[i] = k * (k + 1) / (2n * sum(dists[i]))
         end
     end
 
@@ -45,24 +117,34 @@ function density_function( dists::Vector{Vector{Float64}}, d::Int, q::Int)
 
 end
 
-function data2clust(points::Matrix{Float64}; graph = 1, k = 4, q = 4, τ = 0.01)
+"""
+$(SIGNATURES)
 
-    data2clust(points::Matrix{Float64}, graph, k, q, τ)
+`points` is a matrix of size nd × np where nd is the dimensionality and np is the number of points
+"""
+function tomato(points::Matrix{Float64}; graph = 1, k = 4, q = 4, τ = 0.01)
+
+    tomato(points::Matrix{Float64}, graph, k, q, τ)
 
 end
 
-function data2clust(points::Matrix{Float64}, f::Vector{Float64}, radius, τ)
+"""
+$(SIGNATURES)
+"""
+function tomato(points::Matrix{Float64}, f::Vector{Float64}, δ, τ)
     
     @assert size(points,2) == length(f) "number of points and density are not compatible"
     balltree = BallTree(points)
-    subsets = inrange(balltree, points, radius, true)
+    subsets = inrange(balltree, points, δ, true)
     
     return compute_persistence(points, f, subsets, τ )
 
 end
 
 
-
+"""
+$(SIGNATURES)
+"""
 function compute_persistence(points, f, subsets, τ)
     
     d, n = size(points)
@@ -117,12 +199,12 @@ function compute_persistence(points, f, subsets, τ)
 end
 
 """
-    data2clust(points, graph, k, q, τ)
+$(SIGNATURES)
 
 - `k` : number of nearest neighbors to create the graph
 - `q` : regularity parameter for the approximation of the density function
 """
-function data2clust(points::Matrix{Float64}, graph, k, q, τ)
+function tomato(points::Matrix{Float64}, graph, k, q, τ)
 
     @assert graph in (1,2) "The variable `graph` should be 1 or 2"
 
@@ -141,28 +223,5 @@ function data2clust(points::Matrix{Float64}, graph, k, q, τ)
     return compute_persistence(points, f, subsets, τ)
 
 end
-
-# using LinearAlgebra
-# 
-# function distance_to_density(points, k)
-#     n = size(points, 2)
-#     balltree = BallTree(points)
-#     idxs = inrange(balltree, points, radius, true)
-#     f = zeros(n)
-# 
-#     for i = 1:n
-#         dists = [norm(points[:,i] - points[:,j], 2) for j in idxs[i]]
-#         f[i] = sqrt(k / sum(dists.^2))
-#     end
-#     return f
-# end
-# 
-# function gaussian_nn(points, k, h)
-# 
-#     kdtree = KDTree(points)
-#     idxs, dists = knn(kdtree, points, k)
-# 
-#     return - sum(exp.(dists .* (-0.5)/h))
-# end
 
 end
