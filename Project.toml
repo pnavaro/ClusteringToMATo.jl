@@ -8,4 +8,6 @@ DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 NearestNeighbors = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
 
 [compat]
+julia = "1"
+DataStructures = "0.18"
 NearestNeighbors = "0.4"
