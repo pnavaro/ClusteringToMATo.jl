@@ -1,14 +1,14 @@
 push!(LOAD_PATH,"../src/")
 
 using Documenter
-using ClusteringToMaTo
+using ClusteringToMATo
 using Plots 
 
 ENV["GKSwstype"] = "100"
 
 makedocs(
-         sitename = "ClusteringToMaTo.jl",
-         modules = [ClusteringToMaTo],
+         sitename = "ClusteringToMATo.jl",
+         modules = [ClusteringToMATo],
          format=Documenter.HTML(;
          prettyurls=get(ENV, "CI", "false") == "true",
          mathengine = MathJax(Dict(
@@ -17,7 +17,7 @@ makedocs(
                 :Macros => Dict()
             )
          )),
-         canonical="https://pnavaro.github.io/ClusteringToMaTo.jl",
+         canonical="https://pnavaro.github.io/ClusteringToMATo.jl",
          assets=String[],
          ),
          doctest = false,
@@ -30,5 +30,5 @@ makedocs(
 deploydocs(;
     branch = "gh-pages",
     devbranch = "main",
-    repo   = "github.com/pnavaro/ClusteringToMaTo.jl"
+    repo   = "github.com/pnavaro/ClusteringToMATo.jl"
 )

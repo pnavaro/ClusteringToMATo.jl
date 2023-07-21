@@ -3,7 +3,7 @@
 ```@example demo2
 using Plots
 using DelimitedFiles
-using ClusteringToMaTo
+using ClusteringToMATo
 gr(fmt = :png) # useful to plot a large size of scatter points
 options = (ms=1, aspect_ratio=1, markerstrokewidth=0)
 ```

@@ -1,6 +1,6 @@
-name = "ClusteringToMaTo"
+name = "ClusteringToMATo"
 uuid = "a174fcc0-226c-4228-9356-9cf23f81b616"
-authors = ["Che-Chia Chang <ccchang.am09g@nctu.edu.tw>"]
+authors = ["Che-Chia Chang", "Pierre Navaro"]
 version = "0.1.0"
 
 [deps]
@@ -8,4 +8,6 @@ DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 NearestNeighbors = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
 
 [compat]
+julia = "1"
 DataStructures = "0.18"
+NearestNeighbors = "0.4"
