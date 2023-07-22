@@ -1,5 +1,12 @@
 abstract type AbstractNeighborhoodGraph end
 
+export compute_graph
+
+export BallGraph
+
+"""
+$(TYPEDEF)
+"""
 struct BallGraph <: AbstractNeighborhoodGraph
     δ :: Float64
     BallGraph(δ) = new(δ)
@@ -13,6 +20,11 @@ function compute_graph( graph :: BallGraph, points )
 
 end
 
+export KNNGraph
+
+"""
+$(TYPEDEF)
+"""
 struct KNNGraph <: AbstractNeighborhoodGraph
     k :: Int
     KNNGraph(k::Int) = new(k)
