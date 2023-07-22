@@ -13,5 +13,6 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
 DataStructures = "0.18"
+DocStringExtensions = "0.9"
 NearestNeighbors = "0.4"
 julia = "1"
