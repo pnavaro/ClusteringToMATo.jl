@@ -18,9 +18,13 @@ function (df::BallDensity)(points)
 
 end
 
+export DTM
+
 struct DTM <: AbstractDensityComputation
     k :: Int
 end
+
+export compute_density
 
 """
 $(SIGNATURES)
@@ -33,7 +37,7 @@ function compute_density(df::DTM, points)
     
     f = zeros(n)
     for i = 1:n
-        f[i] = sqrt(df.k / sum(dists[i].^2))
+        f[i] = sqrt(sum(dists[i].^2) / df.k)
     end
     return f
 
