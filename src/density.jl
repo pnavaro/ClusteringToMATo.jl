@@ -1,5 +1,10 @@
 abstract type AbstractDensityComputation end
 
+export BallDensity
+
+"""
+$(TYPEDEF)
+"""
 struct BallDensity <: AbstractDensityComputation
     δ :: Float64
     BallDensity(δ) = new(δ)
@@ -20,6 +25,9 @@ end
 
 export DTM
 
+"""
+$(TYPEDEF)
+"""
 struct DTM <: AbstractDensityComputation
     k :: Int
 end
@@ -43,6 +51,11 @@ function compute_density(df::DTM, points)
 
 end
 
+export GaussianNN
+
+"""
+$(TYPEDEF)
+"""
 struct GaussianNN <: AbstractDensityComputation
     k :: Int
     h :: Float64
@@ -65,6 +78,11 @@ function compute_density(df::GaussianNN, points)
 
 end
 
+export GaussianCutoff
+
+"""
+$(TYPEDEF)
+"""
 struct GaussianCutoff <: AbstractDensityComputation
     δ :: Int
     h :: Float64
@@ -87,14 +105,19 @@ function compute_density(df::GaussianCutoff, points)
 
 end
 
-struct DensityKNN  <: AbstractDensityComputation
+export KNNDensity
+
+"""
+$(TYPEDEF)
+"""
+struct KNNDensity  <: AbstractDensityComputation
     k :: Int
 end
 
 """
 $(SIGNATURES)
 """
-function compute_density(df:: DensityKNN,  points)
+function compute_density(df:: KNNDensity,  points)
 
     d, n  = size(points)
     kdtree = KDTree(points)

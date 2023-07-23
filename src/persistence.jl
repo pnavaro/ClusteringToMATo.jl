@@ -1,35 +1,4 @@
-using RecipesBase
-
-@recipe function f(intervals::Dict{Int,Tuple{Float64,Float64}}; τ = 0.0)
-        
-    aspect_ratio := :equal
-
-    birth = getindex.(values(intervals), 1)
-    death = getindex.(values(intervals), 2)
-    lim_min, lim_max = get(plotattributes, :xlims, (0., maximum(birth)))
-
-    @series begin
-
-        seriestype := :scatter
-        birth, min.(death, lim_max)
-
-    end
-    
-    @series begin
-        seriescolor := :green
-        [lim_min+τ, lim_max], [0, lim_max-τ]
-    end
-
-    primary := false
-    legend --> :none
-    title := "persistence diagram"
-    xlabel := "birth"
-    ylabel := "death"
-    xlims --> (0., maximum(birth))
-
-    lim_min:lim_max, lim_min:lim_max
-
-end
+using PersistenceDiagrams
 
 export compute_persistence
 
@@ -40,17 +9,17 @@ function compute_persistence(f, graph, τ)
     
     n = length(f)
 
-    intervals = Dict{Int,Tuple{Float64,Float64}}()
     v = sortperm(f, rev = true) # sort vertices using f
     sort!(f, rev = true) # sort f
     # get neighbors
     vertices_corr_inv = Dict(zip(v, 1:n)) #indexes of vertices in sorted f
     G = [[vertices_corr_inv[i] for i in subset] for subset in graph[v]]
     𝒰 = IntDisjointSets(n)
+    intervals = Dict{Int,PersistenceInterval}()
     for i = eachindex(v)
         𝒩 = [j for j in G[i] if j < i]
         if length(𝒩) == 0
-            intervals[i] = (f[i], f[i])
+            intervals[i] = PersistenceInterval(f[i], Inf)
         else
             g = 𝒩[argmax(view(f, 𝒩))] # approximate gradient at vertex i
             eᵢ = find_root!(𝒰, g) # r(eᵢ) cluster's root
@@ -59,10 +28,10 @@ function compute_persistence(f, graph, τ)
                 e = find_root!(𝒰, j) # r(e)
                 if e != eᵢ && min(f[e], f[eᵢ]) <= f[i] + τ # merge
                     if f[e] < f[eᵢ]
-                        intervals[eᵢ] = (f[eᵢ], f[i])
+                        intervals[e] = PersistenceInterval(f[e], f[eᵢ])
                         union!(𝒰, eᵢ, e)
                     else
-                        intervals[e] = (f[e], f[i])
+                        intervals[eᵢ] = PersistenceInterval(f[eᵢ], f[eᵢ])
                         union!(𝒰, e, eᵢ)
                     end 
                     eᵢ = find_root!(𝒰, e)   
@@ -78,8 +47,6 @@ function compute_persistence(f, graph, τ)
             r = find_root!(𝒰, e) #  r(e)
             if f[r] >= τ 
                 push!(s, r)
-            else
-                delete!(intervals, r)
             end
         end
     end
@@ -92,7 +59,7 @@ function compute_persistence(f, graph, τ)
         end
     end
 
-    return labels, intervals
+    return labels, PersistenceDiagram(collect(values(intervals)), threshold=τ)
 
 end
 

@@ -34,7 +34,7 @@ Each of these estimators uses one or two parameters.
 
 ```@example first
 f = compute_density(DTM(10), points)
-scatter(points[1,:], points[2,:], marker_z = f, aspect_ratio=1)
+scatter(points[1,:], points[2,:], marker_z = f, aspect_ratio=1, markerstrokewidth=0)
 ```
 
 ## Neighborhood graph
@@ -73,7 +73,7 @@ the largest drop in the sequence of prominences.
 ```@example first
 labels, intervals = compute_persistence(f, graph, Inf)
 
-plot(intervals, τ = 120)
+plot(intervals)
 ```
 
 ```@example first

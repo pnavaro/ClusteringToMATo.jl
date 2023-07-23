@@ -20,7 +20,7 @@ g = BallGraph(87)
 f = KNNDensity(87)
 tau = 7.5e-7
 
-@time labels, intervals = tomato(points, g, f, tau)
+labels, intervals = tomato(points, g, f, tau)
 
 scatter(points[1, :], points[2, :], c = labels; options...)
 ```
@@ -36,7 +36,7 @@ g = BallGraph(1.0)
 f = KNNDensity(100)
 tau = 0.01
 
-@time labels, intervals = tomato(points, g, f, tau)
+labels, intervals = tomato(toy, g, f, tau)
 
 scatter(view(toy,1, :), view(toy,2,:), c = labels; options... )
 ```

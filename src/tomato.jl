@@ -1,3 +1,5 @@
+export tomato
+
 """
 $(SIGNATURES)
 
@@ -18,7 +20,7 @@ function tomato(points::Matrix{Float64}, f::Vector{Float64}, δ, τ)
     balltree = BallTree(points)
     subsets = inrange(balltree, points, δ, true)
     
-    return compute_persistence(points, f, subsets, τ )
+    return compute_persistence( f, subsets, τ )
 
 end
 
@@ -32,18 +34,32 @@ function tomato(points::Matrix{Float64}, graph, k, q, τ)
 
     @assert graph in (1,2) "The variable `graph` should be 1 or 2"
 
-    dim, n  = size(points)
-    kdtree = KDTree(points)
-    idxs, dists = knn(kdtree, points, q)
-
-    f = density_function(dists, dim, q)
+    f = compute_density(DensityKNN(q), points)
 
     if graph == 1
-        subsets, dists = knn(kdtree, points, k)
+        subsets = compute_graph(KNNGraph(k), points)
     elseif graph == 2
-        subsets = inrange(kdtree, points, k)
+        subsets = compute_graph(BallGraph(k), points)
     end
 
-    return compute_persistence(points, f, subsets, τ)
+    return compute_persistence(f, subsets, τ)
+
+end
+
+function tomato(points::Matrix{Float64}, 
+                graph::AbstractNeighborhoodGraph,
+                density::AbstractDensityComputation, τ)
+
+    f = compute_density(density, points)
+
+    g = compute_graph(graph, points)
+
+    return compute_persistence(f, g, τ)
+
+end
+
+function tomato(points::Matrix{Float64}, g::Vector{Vector{Int}}, f::Vector{Float64}, τ)
+
+    return compute_persistence(f, g, τ)
 
 end
