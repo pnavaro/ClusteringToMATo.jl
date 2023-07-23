@@ -16,7 +16,11 @@ points = collect(transpose(readdlm(joinpath("spiral_w_o_density.txt"))))
 ```
 
 ```@example demo2
-@time labels, intervals = tomato(points, 2, 87, 87, 7.5*10.0^(-7))
+g = BallGraph(87)
+f = KNNDensity(87)
+tau = 7.5e-7
+
+@time labels, intervals = tomato(points, g, f, tau)
 
 scatter(points[1, :], points[2, :], c = labels; options...)
 ```
@@ -28,7 +32,11 @@ toy = collect(transpose(readdlm(joinpath("toy_example_w_o_density.txt"))))
 ```
 
 ```@example demo2
-@time labels, intervals = tomato(toy, 2, 1.0, 100, 0.01)
+g = BallGraph(1.0)
+f = KNNDensity(100)
+tau = 0.01
+
+@time labels, intervals = tomato(points, g, f, tau)
 
 scatter(view(toy,1, :), view(toy,2,:), c = labels; options... )
 ```
