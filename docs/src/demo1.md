@@ -22,7 +22,11 @@ p = plot(layout=(1,2))
 scatter!(p[1,1], points[1,:], points[2,:], c = true_labels, 
 ms=3, aspect_ratio=:equal, markerstrokewidth=0,label="")
 
-@time labels, intervals = tomato(points, 2, 0.25, 20, 0.25)
+g = BallGraph(0.25)
+f = KNNDensity(20)
+tau = 0.25
+
+@time labels, intervals = tomato(points, g, f, tau)
 println(" NMI = $(Clustering.mutualinfo(true_labels, labels))")
 scatter!(p[1,2], points[1,:], points[2, :], c = labels, 
       label="", ms=3, markerstrokewidth=0, aspect_ratio=1)
@@ -34,7 +38,10 @@ p = plot(layout=(1,2))
 scatter!(p[1,1], points[1,:], points[2,:], c = true_labels, 
 ms=3, aspect_ratio=:equal, markerstrokewidth=0,label="")
 1
-@time labels, intervals = tomato(points, 1, 10, 5, 0.6)
+g = KNNGraph(10)
+f = KNNDensity(5)
+tau = 0.6
+@time labels, intervals = tomato(points, g, f, tau)
 println(" NMI = $(Clustering.mutualinfo(true_labels, labels))")
 scatter!(p[1,2], points[1,:], points[2, :], c = labels, 
       label="", ms=3, markerstrokewidth=0, aspect_ratio=1)
@@ -46,7 +53,10 @@ p = plot(layout=(1,2))
 scatter!(p[1,1], points[1,:], points[2,:], points[3, :], c = true_labels, 
 ms=3, aspect_ratio=:equal, markerstrokewidth=0,label="")
 
-@time labels, intervals = tomato(points, 2, 15, 10, 0.0000515)
+g = BallGraph(15)
+f = KNNDensity(10)
+tau = 0.0000515
+@time labels, intervals = tomato(points, g, f, tau)
 println(" NMI = $(Clustering.mutualinfo(true_labels, labels))")
 scatter!(p[1,2], points[1,:], points[2, :], points[3, :], c = labels, 
       label="", ms=3, markerstrokewidth=0, aspect_ratio=1)
@@ -59,7 +69,10 @@ p = plot(layout=(1,2))
 scatter!(p[1,1], points[1,:], points[2,:], points[3, :], c = true_labels, 
 ms=3, aspect_ratio=:equal, markerstrokewidth=0,label="")
 
-@time labels, intervals = tomato(points, 1, 10, 100, 0.2)
+g = KNNGraph(10)
+f = KNNDensity(100)
+tau = 0.2
+@time labels, intervals = tomato(points, g, f, tau)
 println(" NMI = $(Clustering.mutualinfo(true_labels, labels))")
 scatter!(p[1,2], points[1,:], points[2, :], points[3, :], c = labels, 
       label="", ms=3, markerstrokewidth=0, aspect_ratio=1)
@@ -72,7 +85,10 @@ p = plot(layout=(1,2))
 scatter!(p[1,1], points[1,:], points[2,:], c = true_labels, 
 ms=3, aspect_ratio=:equal, markerstrokewidth=0,label="")
 
-@time labels, intervals = tomato(points, 2, 1, 10, 0.00000001)
+g = BallGraph(1.0)
+f = KNNDensity(10)
+tau = 0.00000001
+@time labels, intervals = tomato(points, g, f, tau)
 println(" NMI = $(Clustering.mutualinfo(true_labels, labels))")
 scatter!(p[1,2], points[1,:], points[2, :], c = labels, 
       label="", ms=3, markerstrokewidth=0, aspect_ratio=1)
