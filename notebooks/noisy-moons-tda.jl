@@ -1,6 +1,7 @@
 # ---
 # jupyter:
 #   jupytext:
+#     formats: jl:light,ipynb
 #     text_representation:
 #       extension: .jl
 #       format_name: light
@@ -20,7 +21,8 @@ using Random, Plots
 import ClusteringToMATo
 rng = MersenneTwister(1234)
 points, labels = ClusteringToMATo.noisy_moons(rng, 500)
-scatter(points[1,:], points[2,:], ms = 2, color = labels, markerstrokewidth=0)
+options = (ms = 2, markerstrokewidth=0, aspect_ratio = 1, xlims=(-2,2), ylims=(-2,2))
+scatter(points[1,:], points[2,:], c = labels; options...)
 
 # ## Run the C++ program written by original authors
 #
@@ -46,7 +48,7 @@ plot(pd)
 run(`./ToMATo/main_w_density noisy_moons.txt 30 0.2 90`)
 clusters = vec(readdlm("clusters.txt"))
 clusters[isnan.(clusters)] .= 0
-scatter(points[1,:], points[2,:], color = Int.(clusters), aspect_ratio=1, ms=2, markerstrokewidth=0)
+scatter(points[1,:], points[2,:], color = Int.(clusters); options...)
 
 # ## Use the JuliaTDA implementation
 
@@ -65,19 +67,23 @@ g = proximity_graph(points, 0.2)
 k = x -> exp(-(x / 2)^2)
 ds = GeometricDatasets.Filters.density(points, kernel_function = X -> X .|> k |> sum)
 
+plot([0.0, 1.0], [1.0, 1.0])
+
 # +
 import Graphs
 
-function graph_plot(points, graph, density)
+function graph_plot(points, graph)
     p = scatter(points[1,:], points[2,:],  markerstrokewidth=0)
-    for e in s
+    for e in Graphs.edges(graph)
         x1, y1 = points[:,e.src]
         x2, y2 = points[:,e.dst]
-        plot!(p, (x1, x2), (y1, y2), color = :black, lw = 0.5, alpha = 0.5, legend = false)
+        plot!(p, [x1, x2], [y1, y2], color = :black, lw = 0.5, alpha = 0.5, legend = false)
     end
     p
 end
 # -
+
+graph_plot(points, g)
 
 clusters, births_and_deaths = tomato(points, g, ds, Inf)
 
@@ -90,6 +96,4 @@ plot(diagram)
 
 clusters, births_and_deaths = tomato(points, g, ds, 0.1)
 
-scatter(points[1,:], points[2,:], color = clusters, aspect_ratio=1, ms=2, markerstrokewidth=0)
-
-
+scatter(points[1,:], points[2,:], color = clusters; options...)
