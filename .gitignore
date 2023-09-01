@@ -1,0 +1,6 @@
+.ipynb_checkpoints/
+*.swp
+FCPS/
+Manifest.toml
+docs/src/data/
+notebooks/ToMATo/
