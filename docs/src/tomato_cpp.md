@@ -21,17 +21,18 @@ cd ToMATo/ && make ANNLIB=../ann_1.1.2 && cd -
 ```@example cpp
 using DelimitedFiles, Plots, PersistenceDiagrams
 
-gr( fmt = :png)
-
-toy = readdlm("ToMaTo/inputs/toy_example_w_density.txt")
+toy = readdlm("./ToMaTo/inputs/toy_example_w_density.txt")
 
 scatter(toy[:,1], toy[:,2], marker_z = toy[:,3], aspect_ratio=1, ms=2, markerstrokewidth=0, size(500,500))
+savefig("assets/toy_cpp1.png") # hide
+nothing # hide
 ```
+![](assets/toy_cpp1.png)
 
 run the program with delta=0.25 and tau=1e20.
 
-```julia
-run(`./ToMATo/main ToMATo/inputs/toy_example_w_density.txt 0.25 1e20`)
+```@example cpp
+run(`./ToMATo/main ./ToMATo/inputs/toy_example_w_density.txt 0.25 1e20`)
 ```
 - `0.25` is the value of radius delta (a.k.a. Rips radius) to be used
   in the construction of the neighborhood (Rips) graph.
@@ -43,28 +44,34 @@ run(`./ToMATo/main ToMATo/inputs/toy_example_w_density.txt 0.25 1e20`)
 
 You can then visualize the persistence diagram encoded in diagram.txt 
 
-```julia
+```@example cpp
 pairs = readdlm("diagram.txt")
 pairs .*= -1
 intervals = [PersistenceInterval(p...) for p in eachrow(pairs)]
 pd = PersistenceDiagram(intervals)
 plot(pd)
+savefig("assets/toy_cpp2.png") # hide
+nothing # hide
 ```
+![](assets/toy_cpp2.png)
 
 It then shows the thresholding line superimposed to the persistence
 diagram. This may help users find relevant values for tau. Once
 this step is done, you can rerun the clustering program with the
 chosen value of tau :
 
-```julia
-run(`./ToMATo/main ToMATo/inputs/toy_example_w_density.txt 0.25 1e3`);
+```@example cpp
+run(`./ToMATo/main ./ToMATo/inputs/toy_example_w_density.txt 0.25 1e3`);
 ```
 
 and visualize the corresponding clustering in clusters.txt. In this
 example, the choice of tau reduces the number of clusters to 6.
 
-```julia
+```@example cpp
 clusters = vec(readdlm("clusters.txt"))
 clusters[isnan.(clusters)] .= 0
 scatter(toy[:,1], toy[:,2], color = Int.(clusters), aspect_ratio=1, ms=2, markerstrokewidth=0)
+savefig("assets/toy_cpp3.png") # hide
+nothing # hide
 ```
+![](assets/toy_cpp3.png)

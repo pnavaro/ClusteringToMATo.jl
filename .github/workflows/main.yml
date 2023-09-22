@@ -50,6 +50,7 @@ jobs:
          wget -q http://geometrica.saclay.inria.fr/data/Steve.Oudot/clustering/ToMATo_code.tgz
          tar zxvf ToMATo_code.tgz
          cd ToMATo && make ANNLIB=../ann_1.1.2 && cd -
+         mv ToMATo docs/src
       - uses: julia-actions/julia-docdeploy@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
