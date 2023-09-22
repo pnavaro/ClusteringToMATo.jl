@@ -25,6 +25,7 @@ makedocs(
                   "Home" => "index.md",
                   "FCPS data" => "demo1.md",
                   "TDA datasets" => "demo2.md" 
+                  "ToMATo C++" => "tomato_cpp.md" 
                  ])
 
 deploydocs(;
