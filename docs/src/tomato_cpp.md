@@ -1,4 +1,4 @@
-# [Topological Mode Analysis C++ Tool]((@id original_cpp)
+# [Topological Mode Analysis C++ Tool](@id original_cpp)
 
 - The conference version of the paper (high-level presentation, easy to read): [link](http://geometrica.saclay.inria.fr/team/Steve.Oudot/papers/cgos-pbc-09/cgos-pbcrm-11.pdf)
 - The journal version of the paper (with the full technical details): [link](https://geometrica.saclay.inria.fr/data/Steve.Oudot/clustering/jacm_oudot.pdf)
@@ -10,17 +10,15 @@ The original author and main contact to get more details about this method is [S
 ## Install C++ program
 
 ```bash
-cd notebooks/
-wget http://geometrica.saclay.inria.fr/data/Steve.Oudot/clustering/ToMATo_code.tgz
-tar zxvf ToMATo_code.tgz
-cd ToMATo/
 wget https://www.cs.umd.edu/~mount/ANN/Files/1.1.2/ann_1.1.2.tar.gz
 tar zxvf ann_1.1.2.tar.gz
 cd ann_1.1.2 && make linux-g++ && cd -
-make ANNLIB=./ann_1.1.2
+wget http://geometrica.saclay.inria.fr/data/Steve.Oudot/clustering/ToMATo_code.tgz
+tar zxvf ToMATo_code.tgz
+cd ToMATo/ && make ANNLIB=../ann_1.1.2 && cd -
 ```
 
-```julia
+```@example cpp
 using DelimitedFiles, Plots, PersistenceDiagrams
 
 gr( fmt = :png)
