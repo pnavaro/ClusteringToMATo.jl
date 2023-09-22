@@ -21,7 +21,7 @@ cd ToMATo/ && make ANNLIB=../ann_1.1.2 && cd -
 ```@example cpp
 using DelimitedFiles, Plots, PersistenceDiagrams
 
-toy = readdlm("./ToMaTo/inputs/toy_example_w_density.txt")
+toy = readdlm("./ToMATo/inputs/toy_example_w_density.txt")
 
 scatter(toy[:,1], toy[:,2], marker_z = toy[:,3], aspect_ratio=1, ms=2, markerstrokewidth=0, size(500,500))
 savefig("assets/toy_cpp1.png") # hide
