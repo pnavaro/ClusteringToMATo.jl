@@ -1,0 +1,161 @@
+Detailed Description of the Code: 
+---------------------------------
+
+The Core.h file contains the core algorithm. The other basic templates
+are Vertex.h, Cluster.h, and Distance.h.
+
+
+===================================================================
+
+
+The clustering engine is implemented in the compute_persistence()
+function in Core.h. The are a minimum number of functions that must
+be provided by the following support classes:
+
+Vertex - must have a partial (total) ordering defined
+        in the < operator
+	
+	a difference ordering (not necessarily the same
+	as the operator) in the - operator.  In the case
+	of morse-type function this can be used to 
+	implement <
+
+
+	sink() function - a singly linked list. Most often implemented
+	as a a pointer. To avoid requiring pointers explicitly, we use
+	iterators and template parameters to template by the container
+	class. Note that if you want to use set, you have to change
+	the template in Vertex.h since vector and set have different
+	templates.
+
+
+
+	 
+The main data structure is a container of Vertex-type classes. The
+function itself only requires an Iterator, so any class which
+implements an iterator, and the above functionality can be used. This
+I think is a nice example of using template parameters, if you are
+interested in that sort of thing.
+
+
+The next data structure is Distance. This is the data structure which
+accesses the metric information. It requires 2 functions: void
+get_neighbors(Iterator, std::vector<Iterator>&).  double
+distance(Iterator,Iterator)
+
+The first is the more important. The second is used very often so is
+included (particularly in gradient computation) so is included,
+although for barcode computation it is not used.
+
+For get_neighbors, it passes a vector by reference and returns the
+neigbors. Note that if we are simply dealing with a graph we could
+there may not be a notion of distance in which case we can return a 1
+safely.
+
+The current implementation is using ANN for Euclidean spaces.
+
+
+
+Finally we have the Cluster data structure, which keeps track of the
+intervals and sets the parameters of clustering algorithm. It is
+similar in spirit to a traits class. It requires the following
+functions:
+
+
+void new_cluster(Iterator) - creates a new cluster(i.e. local min/max)
+
+bool merge(Iterator,Iterator) - merges 2 min/maxima.  Thows an error
+     if not in the data structure.
+
+     
+void update(std::vector<Iterator>) - performs updates to the boudary
+     flag if you are adjacent to 2 persistent sinks but can be cahnged
+     to do any house keeping after a merge or new min/max etc.
+
+
+bool test(Iterator) - test whether to cluster a node or not.
+     
+
+bool test_neighbors(Iterator) - test whether a neighboring node is
+     valid or not (i.e. a boundary node).
+
+
+bool valid_neighborhood(std::set<Iterator>) - ensures we have a valid
+     gradient (checks that we are not surrounded by the boundary)
+
+Iterator gradient(Iterator x,std::set<Iterator>) - Goes through the
+	 list and return gradient choice.  It is safe to assume that
+	 all the members in the list come before current in the
+	 partial order Note that if this is weighted, then the data
+	 structure must have access to the metric information in
+	 Distance.
+
+
+If you only keep the Core.h this is the functionality which must be
+given for the algorithm to work.
+
+In the reference implementation, there are some further subtleties in
+the communication between the support data structures.
+
+
+===================================================================
+
+Just using these files will not result in functioning system. As such
+we provide Cluster_Basic.h, Interval.h, Distance_ANN.h, Point.h and
+Density.h
+--------------------------------------------------------------------
+
+Interval.h holds the Interval class, which is used to store the
+barcode. It is a pair with the second entry possibly being infinity.
+
+
+--------------------------------------------------------------------
+
+Cluster_Basic.h extends the Cluster_Base Class. It has a data
+structure for holding the barcode called Int_Data and Generator. These
+map the lifetimes and also the generators of the individual connected
+components.  It has a public field called alpha which is the
+persistence threshold. It provides new_cluster(), merge(), test(),
+neighbor_test(), valid_neighborhood() and gradient() functionality
+from Cluster_Base.  if you would like a weighted gradeint (by the
+distance), then you must add access to a distance function. The
+simplest way to do this is by incoporating a pointer to a distance
+structure. Finally, it has three output functions, for outputting
+intervals,clusters and coff files respectively. Note that the coff
+only works in 2 or 3 dim.
+
+This also has the Cluster_Info class which at this point contains only
+the boundary_flag. But this can be used to attach any additional
+information to the Vertices. 
+
+
+--------------------------------------------------------------------
+
+Point.h is a wrapper for ANNPoint with IO functionality added.
+
+--------------------------------------------------------------------
+
+Distance_ANN.h is a wrapper for the ANN library. It works moslty on
+iterators which means that you must update the structure after doing a
+sort. Since this just copying pointers, this is relatively fast and
+does not reallocate any memory. 
+
+get_neighbors() returns the Rips neighbors for a rips parameter mu
+which is a public field. 
+
+The rest of the functions are used by the density estimation.
+
+
+--------------------------------------------------------------------
+
+Density.h is a series of density estimators which have been tested with
+Vertex class and Distance_ANN. The key is to provide a set_func and 
+the appropriate distance queries. 
+
+
+=====================================================================
+
+
+Final Note: The code is well documented and the calls should be
+relatively easy to follow as they are tied to explicit structures. 
+

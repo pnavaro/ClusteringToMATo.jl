@@ -1,0 +1,225 @@
+ToMATo: a Topological Mode Analysis Tool
+C++ code written by Steve Oudot and Primoz Skraba 
+Distributed under the GNU General Public Licence, Version 3
+
+ ------
+|README|
+ ------
+
+
+This package consists essentially of header files that can be used in
+your own implementation. For demonstration purposes, it also contains
+two wrappers, main.C and main_w_density.C, which generate command-line
+based clustering programs (see the Running section for details on how
+to use them).
+
+
+---------------
+Compiling the code:
+
+It is recommended to use the g++ compiler, version >=
+4.2. Before compiling, you need to install and compile the ANN
+library, which is available from http://www.cs.umd.edu/~mount/ANN/.
+
+To compile, edit the Makefile and change the path to the ANN
+library. Make sure you compile it first so the compiler can find the
+header files and linking library. Then, type make to build the two
+programs: main and main_w_density.
+
+All other dependencies are on standard STL classes and will compile
+with recent g++ distributions. Note that this code has also been
+reported to compile and run smoothly under Windows using Visual C++.
+
+
+---------------
+Running the code:
+
+Running ./main without any arguments simply outputs the list of
+required arguments:
+
+- the input file is assumed to be in ASCII format and to have the
+following structure:
+
+coordinates function_value
+coordinates function_value
+coordinates function_value
+coordinates function_value
+	    :
+	    :
+	    :
+
+where the coordinates of each point are given in the form x_1 x_2 ... x_d. 
+
+- the second argument is the radius delta (a.k.a. Rips radius) to be used
+  in the construction of the neighborhood (Rips) graph.
+
+- the third argument is the threshold tau on the prominence of the
+  clusters to be used for merging clusters. It also serves as a
+  threshold on the heights of the peaks, so any cluster of height less
+  than tau is treated as background noise.
+
+- the fourth argument is the name of the COFF file in which the
+  clusters will be output for visualization. It can be opened with
+  Geomview or any 3d viewer that supports OFF files with color
+  information.
+
+
+* Output:
+
+The clusters are output in the file clusters.txt. Line i in this file
+corresponds to the same data point as line i in the input file. Each
+line contains a single integer: the id of the cluster to which the
+corresponding data point belongs, or NaN if the data point has been
+treated as background noise by the algorithm. The clusters are
+numbered from 1 to some value k (depending on the choice of tau).
+
+The persistence diagram is output in a file named diagram.txt. Each
+line gives the coordinates of a diagram point. Such data can be
+visualized e.g. in Matlab by running the script display_diagram
+provided in the utils/ subdirectory of this archive.  
+-------------- Important notice: the persistence diagram will be
+correct only if parameter tau is set to some value higher than
+the maximum of the density over the point cloud (in practice, you can
+typically take 1e20). If you choose a smaller value for tau, then
+some clusters will not be merged whereas they should be, and therefore
+the corresponding points in the persistence diagram will be projected
+down onto the horizontal line y=-infty. --------------
+
+For ease of visualization, the clusters are also output
+color-coded in the file clusters_3d.coff. Only the first 3 coordinates
+are kept per point. Such a file can be visualized in software such as
+Geomview or MeshLab. Each cluster is assigned a random color, black
+meaning background noise.
+
+
+* Example: 
+
+On the toy data set, you can start with the following command:
+
+./main inputs/toy_example_w_density.txt 0.25 1e20
+
+which runs the program with delta=0.25 and tau=1e20. You can then
+visualize the persistence diagram encoded in diagram.txt by typing the
+following commands in Matlab:
+
+load 'diagram'; 
+display_diagram(diagram);
+
+The script display_diagram can take a prominence threshold tau as
+additional argument. For instance,
+
+display_diagram(diagram, 1e3);
+
+It then shows the thresholding line superimposed to the persistence
+diagram. This may help users find relevant values for tau. Once
+this step is done, you can rerun the clustering program with the
+chosen value of tau (e.g. 1.3):
+
+./main inputs/toy_example_w_density.txt 0.25 1e3
+
+and visulalize the corresponding clustering in clusters_3d.coff. You
+can also load inputs/toy_examples_w_density.txt and clusters.txt in
+Matlab and use the command 'scatter' to visualize the result. In this
+example, the choice of tau reduces the number of clusters to 6.
+
+Finally, you can compare your result with the one obtained by the 1976
+paper by Koontz et al. by rerunning the program with tau=0:
+
+./main inputs/toy_example_w_density.txt 0.25 0
+
+
+* Other examples:
+
+./main inputs/spiral_w_density.txt 10 1e-3
+
+-> gives 2 spiral-shaped clusters separated from the background noise 
+
+
+./main inputs/spiral_w_density.txt 25 1e-3
+
+-> gives 2 clusters spanning the entire data set (no background noise)
+
+
+./main inputs/4_rings_w_density.txt 1 0.25 
+
+-> gives 4 ring-shaped clusters spanning the whole data set 
+
+
+* Data sets without density information:
+
+If you have a point cloud without any density information attached
+to it, you can use ./main_w_density, which first estimates the density
+at each data point using the (inverse of the) distance to a measure,
+and then runs the same clustering code as ./main. There is one
+additional parameter to be tuned: the number k of neighbors to use when
+computing the distance to a measure. The rest of the arguments are the
+same as above.
+
+For instance, on the same example as above you may run the density
+estimator with k=200:
+
+./main_w_density inputs/toy_example_w_o_density.txt 200 0.25 1e20
+
+You can then visualize the diagram in Matlab and find that choosing
+tau=2 should give the correct number of clusters. Afterwards, you can
+re-run the clustering with the new threshold:
+
+./main_w_density inputs/toy_example_w_o_density.txt 200 0.25 2
+
+The resulting 6 clusters are output in clusters.txt and clusters_3d.coff.
+
+Note that in the file include/Density.h you can find other density
+estimators (ball, Gaussian) for you to use instead of the (inverse)
+distance to a measure in main_with_density.
+
+
+---------------
+Known bugs and limitations:
+
+* This implementation does not follow the prescriptions of the paper
+  in that the information regarding the roots of the clusters is
+  encoded directly in the union-find data structure, not in a separate
+  container. As a result, long paths may appear in the disjoint-set
+  forest, thus yielding a O(nm) worst-case running time in theory, where n and
+  m are respectively the number of vertices and number of edges of the
+  neighorhood graph. Note however that the running time remains reasonable in
+  practice, where the clustering procedure turns out to run much
+  faster than the neighborhood graph construction anyway.
+
+
+---------------
+Code structure:
+
+The core of the algorithm is implemented in Core.h.  It is templated by
+three classes: an iterator class, a distance class, and a cluster
+class. 
+
+* The iterator class is simply the iterator on the container of the
+data points (represented by instances of the Vertex class). The
+container must be able to return such an iterator through the
+get_sink() and set_sink() methods. In addition, for purely technical
+reasons the current implementation templates the Vertex class by the
+container that holds it.
+
+* The distance class is here mostly for computing the neighborhood graph:
+ in spirit it contains all the metric information.
+
+* The clustering class is here for setting the parameters of the
+algorithm. It is templated by the distance class because we may want
+to divide by the distance when computing the pseudo-gradient.
+
+In these cases it should be noted that the vertex class contains the
+geometry for each point as well as additional cluster information used
+by the cluster class. This way, this information as well as the
+function value is directly associated with the point.
+
+As a rule of thumb, the prototypes of the functions that must be
+provided are listed in Cluster.h and Distance.h. The only two
+functions the point cloud class must provide to the algorithm are
+get_sink() and set_sink(), which return an iterator of the appropriate
+type.
+
+
+For a detailed description of the code architecture, please refer to
+the Code_description.txt file. Dependencies between classes are
+illustrated in the Dependencies.pdf file.
