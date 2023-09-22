@@ -8,7 +8,7 @@
 #       format_version: '1.5'
 #       jupytext_version: 1.15.1
 #   kernelspec:
-#     display_name: Julia 1.9
+#     display_name: Julia 1.9.3
 #     language: julia
 #     name: julia-1.9
 # ---
@@ -55,21 +55,20 @@ scatter(points[1,:], points[2,:], color = Int.(clusters); options...)
 # +
 import Pkg
 Pkg.add("Graphs")
-Pkg.add(url="https://github.com/JuliaTDA/GeometricDatasets.jl")
 Pkg.add(url="https://github.com/vituri/Quartomenter.jl")
+Pkg.add(url="https://github.com/JuliaTDA/GeometricDatasets.jl")
 Pkg.add(url="https://github.com/JuliaTDA/ToMATo.jl")
 
 using ToMATo
 import GeometricDatasets
 # -
 
-g = proximity_graph(points, 0.2)
+@time g = proximity_graph(points, 0.2)
+
+# +
 k = x -> exp(-(x / 2)^2)
 ds = GeometricDatasets.Filters.density(points, kernel_function = X -> X .|> k |> sum)
 
-plot([0.0, 1.0], [1.0, 1.0])
-
-# +
 import Graphs
 
 function graph_plot(points, graph)
@@ -81,9 +80,44 @@ function graph_plot(points, graph)
     end
     p
 end
-# -
 
 graph_plot(points, g)
+
+# +
+using RecipesBase
+
+@userplot GraphPlot
+
+@recipe function f(gp::GraphPlot)
+
+    points, graph = gp.args
+    
+    aspect_ratio := 1
+    
+    @series begin
+        seriestype := :scatter
+        color := :skyblue
+        label := "points"
+        
+        points[1,:], points[2,:]
+    end
+
+    for e in Graphs.edges(graph)
+        x1, y1 = points[:,e.src]
+        x2, y2 = points[:,e.dst]
+        @series begin
+            color := :black
+            linewidth := 0.5
+            alpha := 0.5
+            legend := false
+            [x1, x2], [y1, y2]
+        end
+    end
+    
+end
+# -
+
+graphplot(points, g)
 
 clusters, births_and_deaths = tomato(points, g, ds, Inf)
 

@@ -1,5 +1,17 @@
 # ClusteringToMATo.jl
 
+Julia package, based on 
+
+Chazal, F., Guibas, L. J., Oudot, S. Y., and Skraba, P. 2013. Persistence-based clustering in Riemannian
+manifolds.
+J. ACM
+60, 6, Article 41 (November 2013), 38 pages.
+DOI:
+http://dx.doi.org/10.1145/2535927
+([pdf](https://geometrica.saclay.inria.fr/data/Steve.Oudot/clustering/jacm_oudot.pdf))
+
+You can find more details on this algorithm and the C++ implementation [here](@ref original_cpp).
+
 ## Algorithm ToMATo
 
 ![](assets/algorithm-tomato.png)

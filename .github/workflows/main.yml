@@ -42,7 +42,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: julia-actions/julia-buildpkg@latest
-      - run: mv notebooks/data docs/src/
+      - run: |
+         mv notebooks/data docs/src
+         wget -q https://www.cs.umd.edu/~mount/ANN/Files/1.1.2/ann_1.1.2.tar.gz
+         tar zxvf ann_1.1.2.tar.gz
+         cd ann_1.1.2 && make linux-g++ && cd -
+         wget -q http://geometrica.saclay.inria.fr/data/Steve.Oudot/clustering/ToMATo_code.tgz
+         tar zxvf ToMATo_code.tgz
+         cd ToMATo && make ANNLIB=../ann_1.1.2 && cd -
+         mv ToMATo docs/src
       - uses: julia-actions/julia-docdeploy@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

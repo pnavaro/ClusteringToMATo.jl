@@ -15,18 +15,16 @@
 # # Noisy moons
 
 using ClusteringToMATo
-using Distances
-using NearestNeighbors
-using PersistenceDiagrams
 using Plots
 using Random
+using PersistenceDiagrams
 
 # ## Create the data set
 
 rng = MersenneTwister(1234)
 points, labels = noisy_moons(rng, 1000)
-scatter(points[1,:], points[2,:], c = labels,
-aspect_ratio=1, ms = 3, palette = :rainbow)
+options = (aspect_ratio=1, ms = 3, palette = :rainbow, xlims=(-2,2), ylims=(-2,2))
+scatter(points[1,:], points[2,:], c = labels; options...)
 
 # ## Run the C++ program written by original authors
 #
@@ -51,7 +49,7 @@ plot(pd)
 run(`./ToMATo/main_w_density noisy_moons.txt 30 0.2 200`)
 clusters = vec(readdlm("clusters.txt"))
 clusters[isnan.(clusters)] .= 0
-scatter(points[1,:], points[2,:], color = Int.(clusters), aspect_ratio=1, ms=2, markerstrokewidth=0)
+scatter(points[1,:], points[2,:], color = Int.(clusters); options...)
 
 # ## Use the Julia implementation
 
@@ -65,3 +63,7 @@ plot(diagram)
 
 labels, diagram = compute_persistence( f, graph, 1.0);
 scatter(points[1,:], points[2,:], c = labels, aspect_ratio=1 )
+
+graph
+
+
