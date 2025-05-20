@@ -18,7 +18,7 @@ tau = 0.25
 labels, intervals = tomato(points, g, f, tau)
 scatter!(p[1,2], points[1,:], points[2, :], c = labels,
       label=&quot;&quot;, ms=3, markerstrokewidth=0, aspect_ratio=1)
-title!(p[1,1], &quot; NMI = $(Clustering.mutualinfo(true_labels, labels))&quot;)</code></pre><img src="5159f69c.svg" alt="Example block output"/><pre><code class="language-julia hljs">points, true_labels = read_csv(joinpath(&quot;data&quot;, &quot;Lsun.csv&quot;))
+title!(p[1,1], &quot; NMI = $(Clustering.mutualinfo(true_labels, labels))&quot;)</code></pre><img src="3000fabd.svg" alt="Example block output"/><pre><code class="language-julia hljs">points, true_labels = read_csv(joinpath(&quot;data&quot;, &quot;Lsun.csv&quot;))
 p = plot(layout=(1,2))
 scatter!(p[1,1], points[1,:], points[2,:], c = true_labels,
 ms=3, aspect_ratio=:equal, markerstrokewidth=0,label=&quot;&quot;)
@@ -28,7 +28,7 @@ tau = 0.6
 labels, intervals = tomato(points, g, f, tau)
 scatter!(p[1,2], points[1,:], points[2, :], c = labels,
       label=&quot;&quot;, ms=3, markerstrokewidth=0, aspect_ratio=1)
-title!(p[1,1], &quot; NMI = $(Clustering.mutualinfo(true_labels, labels))&quot;)</code></pre><img src="97d0df2c.svg" alt="Example block output"/><pre><code class="language-julia hljs">points, true_labels = read_csv(joinpath(&quot;data&quot;, &quot;Atom.csv&quot;))
+title!(p[1,1], &quot; NMI = $(Clustering.mutualinfo(true_labels, labels))&quot;)</code></pre><img src="f2f3cb46.svg" alt="Example block output"/><pre><code class="language-julia hljs">points, true_labels = read_csv(joinpath(&quot;data&quot;, &quot;Atom.csv&quot;))
 p = plot(layout=(1,2))
 scatter!(p[1,1], points[1,:], points[2,:], points[3, :], c = true_labels,
 ms=3, aspect_ratio=:equal, markerstrokewidth=0,label=&quot;&quot;)
@@ -38,7 +38,7 @@ tau = 0.0000515
 labels, intervals = tomato(points, g, f, tau)
 scatter!(p[1,2], points[1,:], points[2, :], points[3, :], c = labels,
       label=&quot;&quot;, ms=3, markerstrokewidth=0, aspect_ratio=1)
-title!(p[1,1], &quot; NMI = $(Clustering.mutualinfo(true_labels, labels))&quot;)</code></pre><img src="71a54282.svg" alt="Example block output"/><pre><code class="language-julia hljs">points, true_labels = read_csv(joinpath(&quot;data&quot;, &quot;Chainlink.csv&quot;))
+title!(p[1,1], &quot; NMI = $(Clustering.mutualinfo(true_labels, labels))&quot;)</code></pre><img src="4322e5bc.svg" alt="Example block output"/><pre><code class="language-julia hljs">points, true_labels = read_csv(joinpath(&quot;data&quot;, &quot;Chainlink.csv&quot;))
 
 p = plot(layout=(1,2))
 scatter!(p[1,1], points[1,:], points[2,:], points[3, :], c = true_labels,
@@ -49,7 +49,7 @@ tau = 0.2
 labels, intervals = tomato(points, g, f, tau)
 scatter!(p[1,2], points[1,:], points[2, :], points[3, :], c = labels,
       label=&quot;&quot;, ms=3, markerstrokewidth=0, aspect_ratio=1)
-title!(p[1,1], &quot; NMI = $(Clustering.mutualinfo(true_labels, labels))&quot;)</code></pre><img src="6e6960b8.svg" alt="Example block output"/><pre><code class="language-julia hljs">points, true_labels = read_csv(joinpath(&quot;data&quot;, &quot;EngyTime.csv&quot;))
+title!(p[1,1], &quot; NMI = $(Clustering.mutualinfo(true_labels, labels))&quot;)</code></pre><img src="063fbdfc.svg" alt="Example block output"/><pre><code class="language-julia hljs">points, true_labels = read_csv(joinpath(&quot;data&quot;, &quot;EngyTime.csv&quot;))
 
 p = plot(layout=(1,2))
 scatter!(p[1,1], points[1,:], points[2,:], c = true_labels,
@@ -60,4 +60,4 @@ tau = 0.1
 labels, intervals = tomato(points, g, f, tau)
 scatter!(p[1,2], points[1,:], points[2, :], c = labels,
       label=&quot;&quot;, ms=3, markerstrokewidth=0, aspect_ratio=1)
-title!(p[1,1], &quot; NMI = $(Clustering.mutualinfo(true_labels, labels))&quot;)</code></pre><img src="286fc878.svg" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../demo2/">TDA datasets »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.5.0 on <span class="colophon-date" title="Monday 29 July 2024 11:09">Monday 29 July 2024</span>. Using Julia version 1.10.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+title!(p[1,1], &quot; NMI = $(Clustering.mutualinfo(true_labels, labels))&quot;)</code></pre><img src="46849756.svg" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../demo2/">TDA datasets »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.11.4 on <span class="colophon-date" title="Tuesday 20 May 2025 14:48">Tuesday 20 May 2025</span>. Using Julia version 1.11.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
