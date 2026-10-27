@@ -4,6 +4,7 @@ using DataStructures
 using Distances
 using DocStringExtensions
 using NearestNeighbors
+using Random
 
 include("clusters.jl")
 include("density.jl")
