@@ -34,7 +34,7 @@ function tomato(points::Matrix{Float64}, graph, k, q, τ)
 
     @assert graph in (1,2) "The variable `graph` should be 1 or 2"
 
-    f = compute_density(DensityKNN(q), points)
+    f = compute_density(KNNDensity(q), points)
 
     if graph == 1
         subsets = compute_graph(KNNGraph(k), points)
